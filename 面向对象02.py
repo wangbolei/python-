@@ -137,4 +137,5 @@ class Person():
 p = Person()
 #name是公有变量
 print(p.name)
+#访问私有变量用_类命__成员名
 print(p._Person__age)
