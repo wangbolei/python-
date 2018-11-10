@@ -1,0 +1,445 @@
+# 1. 模块
+- 一个模块就是一个包含python代码的文件,后缀名是.py就可以,模块就是个python文件
+- 为什么我们要用模块
+    - 程序太大,编写维护非常不方便,需要拆分
+    - 模块可以增加代码重复利用的方式
+    - 当作命名空间使用,避免命名冲突
+- 如何定义模块
+    - 模块就是一个普通文件,所以任何代码都可以直接书写
+    - 不过根据模块的规范,最好在模块中编写以下内容
+        - 函数(单一功能)
+        - 类(相似功能的组合,或者类似业务模块)
+        - 测试代码
+        
+- 如何使用模块
+    - 模块可以直接导入
+        - 假如模块名称直接以数字开头,需要借助于importlib帮助
+    - 语法
+    
+        import module_name
+        module_name.function_name
+        module-name.class_name
+    - import 模块 as 别名
+        - 导入的同时给模块起一个别名
+        - 其余用法跟第一种相同
+    - from module_name import func_name, class_name 
+    - 使用上述方法可以有选择性的导入
+    - from module_name import *     <* 代表所有>
+        - 
+        导入所有模块的内容
+- 'if __name__ == "__main__"'的使用
+    - 可以有效避免模块代码被导入的时候被动执行的问题
+    - 建议所有程序的入口都以此代码为入口
+
+# 2. 模块的搜索路径和存储
+- 什么是模块的搜索路径
+    - 加载模块的时候,系统会在哪些地方寻找此模块
+- 系统默认的模块搜索路径
+    
+        import sys
+        sys.path 属性可以获取路径列表        
+- 添加搜索路径
+        
+        sys.path.append(dir)
+        
+- 模块的加载顺序
+    1. 搜索内存中已经加载好的模块
+    2. 搜索python的内置模块
+    3. 搜索sys.path路径
+    
+# 3. 包
+- 包是一种组织管理代码的方式,包里面存放的是模块
+- 用来将模块包含在一起的文件夹就是包
+- 自定义包的结构
+        
+        
+        /---包
+        /---/--- __init__.py   包的标志文件
+        /---/--- 模块1
+        /---/--- 模块2
+        /---/--- 子包(子文件夹)
+        /---/---/--- __init__.py   包的标志文件
+        /---/---/--- 子包模块1
+        /---/---/--- 子包模块2
+        
+- 包的导入操作
+    - import package_name
+        - 直接导入一个包,可以使用__init__.py中的内容
+        - 使用方式是:
+                
+                package_name.func_name
+                package_name.class_name.func_name()
+        - 此种方式的访问内容是
+    - import package_name as p
+        - 具体用法跟作用方法,跟上述简单导入一致
+        - 注意的是此种方法是默认对__init__.py内容的导入
+        
+    - import package.module
+        - 导入包中某一个具体的模块
+        - 使用方法
+                
+                package.module.func_name
+                package.module.class.fun()
+                package.module.class.var
+                
+    - import package.module as pm
+    
+- from ... import 导入
+    - from package import module1, module2, module3, .....
+    - 此种导入方法不执行__init__的内容
+    
+            from pkg01 import p01
+            p01.sayHello()
+            
+    - from package import *
+        - 导入当前包 __init__.py 文件中所有的函数跟类
+        - 使用方法
+        
+                func_name()
+                class_name.func_name()
+                class_name.var
+- from package.module import *
+    - 导入包中指定的模块的所有内容
+    - 使用方法
+                
+            func_name()
+            class_name.func_name()
+- 在开发环境中经常会所引用其他模块,可以在当前包中直接导入其他模块的内容
+    - import 完整的包或者模块的路径
+    
+- '__all__'的用法
+    - 在使用from package import *的时候, * 可以导入的内容
+    - '__init__.py'中如果文件为空,或者没有'__all__',那么只可以把
+        '__init__'中的内容导入
+    - '__init__'如果设置了'__all__'的值,那么按照'__all__'指定的子包
+        或者模块进行加载,如此则不会载入'__init__'中的内容
+    - '__all__ =['module1','module2','package1'......]'
+# 4. 命名空间
+- 用于区分不同位置不同功能但相同名称的函数或者变量的一个特定前缀
+- 作用是防止命名冲突\
+        
+        setName()
+        Student.setName()
+        Dog.setName()
+        
+# 5. 异常
+- 广义上的错误分为错误和异常
+- 错误指的是可以认为避免
+- 异常是指在语法逻辑正确的前提下,出现的问题
+- 在python里面,异常是一个类,可以处理和使用`
+- 异常的分类
+    - AssertError 断言语句(assert) 失败
+    - AttributeError 尝试访问未知的对象属性
+    - EOFError 用户输入文件末尾标志EOF(Ctrl+d)
+    - FloatingPointError 浮点计算错误
+    - GeneratorExit generator.close()方法被调用的时候
+    - ImportError 导入模块失败的时候
+    - IndexError 索引超出序列的范围
+    - KeyError 字典中查找一个不存在的关键字
+    - KeyBoardInterrupt 用户输入中断键(Ctrl+c)
+    - MemoryError 内存溢出(可通过删除对象释放内存)
+    - NameError 尝试访问一个不存在的变量
+    - Not ImplementedError 尚未实现的方法
+    - OSError 操作系统产生的异常(例如打开一个不存在的文件)
+    - OverFlowError 数值运算超出最大限制
+    - ReferenceError 弱引用(weak reference)试图访问一个已经被垃圾回收机制回收了的对象
+    - RunTimeError 一般的运行时错误
+    - StopIteration 迭代器没有更多的值
+    - SyntaxError Python的语法错误
+    - IndentationError 缩进错误
+    - TabError Tab和空格混合使用
+    - SystemError Python编译器系统错误
+    - SystemExit Python编译器进程被关闭
+    - TypeError 不同类型间的无效操作
+    - UnBoundLocalError 访问一个未初始化的本地变量(NameError的子类)
+    - UnicodeError Unicode相关错误(ValueError的子类)
+    - UnicodeEncodeError Unicode编码时的错误(Unicode Error的子类)
+    - UnicodeDecodeError Unicode解码时的错误(UnicodeError的子类)
+    - UnicodeTranslateError Unicode转换时的错误(Unicode Error的子类)
+    - Value Error传入无效的参数
+    - ZeroDivisionError 除数为零
+- 异常处理
+    - 不能保证程序永远正确运行
+    - 但是必须保证程序在最坏的情况下得到的问题被妥善处理
+    - python的异常处理模块全部语法为
+            
+            try:
+                尝试实现某个操作,
+                如果没有出现异常,任务就可以完成
+                如果出现异常,将异常从当前代码块扔出去尝试解决异常
+            except 异常类型1:
+                解决方案1: 用于尝试在此处处理异常解决问题
+            except 异常处理2:
+                解决方案2: 用于尝试在此处处理异常解决问题
+            except (异常类型1,异常类型2......)
+                解决方案:针对多个异常使用相同的处理方式
+            except:
+                解决方案:所有异常的解决方案
+            else:
+                如果没有出现异常,将会执行此处代码
+            finally:
+                管你有没有异常都要执行的代码
+    - 流程
+        1. 执行try下面的语句
+        2. 如果出现异常,则在except语句里查找对应异常并进行处理
+        3. 如果没有出现异常,则执行else语句内容
+        4. 最后,不管是否出现异常,都要执行finally语句
+    - 除except(最少一个)以外,else和finally可选
+- 用户手动引发异常
+    - 当某些情况,用户希望自己引发一个异常的时候,可以使用
+        raise 关键字来引发异常
+    - 自定义异常必须是系统异常的子类
+    - 关于自定义异常
+        - 只要是raise异常,则推荐自定义异常
+        - 在自定义异常的时候,一般包含以下内容
+            - 自定义发生异常的异常代码
+            - 自定义发生异常的问题提示
+            - 自定义发生异常的行数
+        - 最终的目的是,一旦发生异常,方便程序员快速定位错误现场
+# 6. 常用模块<使用时都应该先导入,string是特例>
+- calendar
+    - 跟日历相关的模块
+    - _calendar: 获取一年的日历字符串
+    - 参数
+        w = 每个日期之间的间隔字符数
+        l = 每周所占用的行数
+        c = 每个月之间的间隔字符数
+    - isleap: 判断某一年是否是闰年
+    - leapdays: 获取指定年份之间闰年的个数
+    - month: 获取某个月的日历字符串
+    - monthrange: 获取一个月的周几开始即和天数
+        - 返回值: 元组(周几开始,总天数)
+        - 注意: 周默认表示0-6,表示周一到周日
+    - monthcalendar: 返回一个月每天的矩阵列表
+        - 返回值: 二级列表
+        - 注意: 矩阵中没有天数用0表示
+    - prcal: 直接打印日历
+    - prmonth: 直接打印整个月的日历
+    - week: 获取某一日是周几
+- time
+    - 时间戳
+        - 一个时间表示,根据不同语言,可以是整数或者浮点数
+        - 是从1970年1月1日0时0分0秒到现在经历的秒数
+        - 如果表示的时间是1970年以前或者太遥远的未来,可能出现异常
+        - 32位操作系统能够支持到2038年
+    - UTC时间
+        - UTC时间又称为世界协调时间,以英国的格林尼治天文所在地区的时间作为参考时间,也叫做世界标准时间.
+        - 中国时间是 UTC+8 东八区
+    - 夏令时
+        - 夏令时就是在夏天时的时候将时间调快1小时,本意是督促大家早睡早起节省蜡烛,每天变成25个小时,本质还没变是24小时
+    - 时间元组
+        一个包含时间内容的普通元组
+            索引      内容      属性          值
+            0       年        tm_year      2015
+            1       月        tm_mon       1~12
+            2       日        tm_mday      1~31
+            3       时        tm_hour      0~23
+            4       分        tm_min       0~59
+            5       秒        tm_sec       0~61  60表示闰秒 61保留值
+            6       周几       wm_wday      0~6
+            7       第几天     tm_yday      1~366
+            8       夏令时     tm_isdst     0, 1, -1(表示夏令时)
+    - 时间模块的属性
+        - timezeon: 当前时区和UTC时间相差的秒数,在没有夏令时的情况下的间隔
+        - altzeon: 获取当前时区与UTC时间相差的秒数,在没有夏令时的情况下
+        - daylight: 检测当前是否是夏令时时间状态,0 表示不是
+    - localtime:得到当前时间的时间结构
+        - 可以通过点号操作符得到相应的属性元素内容
+    - asctime: 返回元组的正常字符串化之后的时间格式
+        格式: time.asctime (时间元组)
+        返回值: 字符串 Tue Jun 6 11:11:00 2017
+    - ctime: 获取字符串化的当前时间
+    - mktime: 使用时间元组获取对应的时间戳
+        - 格式: time.mktime  (时间元组)
+        - 返回值: 浮点数时间戳
+    - clock: 获取CPU时间
+    - sleep: 使程序进入睡眠状态,n秒后继续
+    - strftime: 将时间元组转换成自定义的字符串格式
+        '''
+        格式      含义      
+        %a      本地(locale)  简化星期名称
+        %A      本地完整星期名称
+        %b      本地简化月份名称
+        %B      本地完整月份名称
+        %c      本地相应的日期和时间表示
+        %d      一个月中的第几天(01-31)
+        %H      一天中的第几个小时(24小时制,00-23)
+        %I      一天中的第几个小时(12小时制,01-12)
+        %j      一年中的第几天(001-366)
+        %m      月份(01-12)
+        %M      分钟数(00-59)
+        %p      本地am 或者 pm 的相应符    注1
+        %S      秒(01-61)  注2
+        %U      一年中的星期数(00-53 星期天是一个星期的开始)
+        %w      一个星期中的第几天(0-6,0是星期天)  注3
+        %W      和%U基本相同,不同的是%W以星期一为一个星期的开始
+        %x      本地相应日期
+        %X      本地相应时间
+        %y      去掉世纪的年份(00-99)
+        %Y      完整的年份
+        %z      用 +HHMM 或者 -HHMM表示距离格林尼治的时区偏移
+        %%      %号本身
+        '''
+- datetime
+    - datetime提供日期和时间的运算和表示
+    - datetime常见属性
+        - datetime.date: 一个理想的日期,提供year,month,day属性
+        - datetime.time: 提供一个理想的时间,居于hour,minute,sec,microsec等内容
+        - datetime.datetime: 提供日期跟时间的组合
+        - datetime.timedelta: 提供一个时间差,时间长度
+    - datetime.datetime模块
+        - 提供比较好用的时间而已
+        - 类定义
+            
+                class datetime.datetime(year, month, day[, hour
+                    [, minute[, second[, microsecond[, tzinfo]]]]])
+                # The year, month and day arguments are required.
+                MINYEAR <= year <= MAXYEAR
+                1 <= month <= 12
+                1 <= day <= n
+                0 <= hour < 24
+                0 <= minute < 60
+                0 <= second < 60
+                0 <= microsecond < 10**
+        - 类方法
+            datetime.today(): 返回当前本地datetime,随着 tzinfo None
+            datetime.fromtimestamp(time.time())
+            datetime.now([tz]): 返回当前本地日期和时间,如果可选参数tz为None或没有详细说明,这个方法会像today()
+            datetime.utcnow(): 返回当前的UTC日期和时间,如果 tzinfo None,那么与now()类似
+            datetime.fromtimestamp(timestamp[, tz]): 根据时间戳返回本地的日期和时间,tz指定时区
+            datetime.utcfromtimestamp(timestamp): 根据时间戳返回UTC datetime
+            datetime.fromordinal(ordinal): 根据Gergorian ordinal返回datetime
+            datetime.combine(date,time): 根据date和time返回一个新的datetime
+            datetime.strptime(date_string, format): 根据date_string和format返回一个datetime
+                
+        - 实例方法
+            datetime.date(): 返回相同年月日的date对象
+            datetime.time(): 返回相同时分秒微秒的time对象
+            datetime.replace(kw): kw in [year, month, day, hour, minute, 
+                second, microsecond, tzinfo], 与date类似
+        - 类属性
+            datetime.min: datetime(MINYEAR, 1, 1)
+            datetime.max: datetime(MAXYEAR, 12, 31, 23, 59, 999999)
+        - 实例属性(read_only)
+            datetime.year: 1-9999
+            datetime.month: 1-12
+            datetime.day: 1-n
+            datetime.hour: In range(60)
+            datetime.second: In range(60)
+            datetime.microsecond: In range(1000000)
+- timeit
+    - timeit-: 时间测量工具
+- os
+    - 跟操作系统相关的模块,主要是文件操作
+    - 与系统相关的操作,主要包含在三个模块里
+        - os: 操作系统目录相关
+        - os.path: 系统路经相关操作
+        - shutil: 高级文件操作,目录树的操作,文件赋值,删除,移动
+    - 路径: 
+        - 绝对路径: 总是从根目录上开始
+        - 相对路径: 基本以当前环境为开始的一个相对的地方
+    - getcwd(): 获取当前的工作目录       
+        格式: os.getcwd()
+        返回值: 当前工作目录的字符串
+        当前工作目录就是程序在进行文件相关操作,默认查找文件的目录
+    - chird(): 改变当前的工作目录<change directory>
+        格式: os.chird(路径)
+        返回值:  无 
+    - listdir(): 获取一个目录中所有子目录和文件的名称列表
+        格式: os.listdir(路径)
+        返回值: 所有子目录和文件名称的列表
+    - makedirs(): 递归创建文件夹
+        格式: os.makedirs(递归路径)
+        返回值: 无
+        递归路径: 多个文件夹层层包含的路径就是递归路径   例如: a/b/c......
+    - system(): 运行系统shell命令
+        格式: os.system(系统命令)
+        返回值: 打开一个shell或者终端命令
+        一般推荐使用subprocess代替
+    - getenv(): 获取指定的系统环境变量值
+        格式: os.getenv('环境变量名')
+        返回值: 指定环境变量名对应的值
+        相应的还有putenv
+    - exit(): 退出当前程序
+    - 值部分
+        - 在路经相关的操作中,不要手动拼写地址,因为手动拼写的路径可能不具有移植性
+        - os.curdir: current dir,当前目录
+        - os.pardir: parent dir,父亲目录
+        - os.sep: 当前系统的路径分隔符
+            - windows: "\"
+            - linux: "/"
+        - os.linesep: 当前系统的换行符号
+            - windows: "\r\n"
+            - unix,linux,macos: "\n"
+        - os.name: 当前系统名称
+            - windows: nt
+            - mac,unix,linux: posix
+        - os.path模块: 根路径相关的模块
+            - abspath(): 将路径转化为绝对路径
+                格式: os.path.abspath('路径')
+                返回值: 路径的绝对路径
+            - basename(): 获取路径中的文件名部分
+                格式: os.path.basename('路径')
+                返回值: 文件名字符串
+            - jion(): 将多个路径拼合成一个路径
+                格式: os.path.jion(路径1,路径2....)
+                返回值: 组合之后的新路径字符串
+            - split(): 将路径切割为文件夹部分和当前文件部分
+                格式: os.path.split(路径)
+                返回值: 路径和文件名组成的元组
+            - isdir(): 检测是否是目录
+                格式: os.path.isdir(路径)
+                返回值: 布尔值
+            - exists(): 检测文件或者目录是否存在
+                格式: os.path.exists(路径)
+                返回值: 布尔值
+- shutil
+    - copy(): 复制文件
+        格式: shutil.copy(来源路径,目标路径)
+        返回值: 返回目标路径
+        拷贝的同时,可以给文件重命名
+    - copy2(): 复制文件,保留元数据(文件信息)
+        格式: shutil.copy2(来源路径,目标路径)
+        返回值: 返回目标路径
+        注意: copy和copy2的唯一区别在于copy2复制文件时尽量保留元数据
+    - copyfile(): 将一个文件中的内容复制到另外一个文件中
+        格式: shutil.copyfile('源路径', '目标路径')
+        返回值: 无
+    - move(): 移动文件/文件夹
+        格式: shutil.move(源路径,目标路径)
+        返回值: 目标路径
+    - 归档和压缩
+        - 归档: 把多个文件或者文件夹合并到一个文件当中
+            - make_archive(): 归档操作
+                格式: shutil.make_archive('归档之后的目录和文件名','后缀','需要归档的文件夹')
+                返回值: 归档之后的地址
+            - unpacke_archive(): 解包操作
+                格式: shutil.unpack_archive('归档文件地址','解包之后的地址')
+                返回值: 解包之后的地址
+        - 压缩: 用算法把多个文件或者文件夹无损或者有损合并到一个文件当中
+- zip
+    - 压缩包
+    - 模块名称叫 zipfile
+    - zipfile.ZipFile(file[, mode[, compression[, allowZip64]]])
+        创建一个ZipFile对象,表示一个zip文件.参数file表示文件的路径或类文件对象(file-likeobject);
+    - ZipFile.gentinfo(name): 获取zip文档内指定文件的信息,返回一个zipfile.ZipInfo对象,它包括文件的详细信息
+    - ZipFile.namelist(): 获取zip文档内所有文件的名称列表
+    - ZipFile.extractall([path[, members[, pwd]]]): 解压zip文档中的所有文件到当前目录,参数members的默认值
+        为zaip文档内的所有文件名称列表
+- random
+    - 随机数
+    - 所有的随机模块都是伪随机
+    - random(): 获取0-1之间的随机小数
+        格式: random.random()
+        返回值: 随机0-1之间的小数
+    - choice(): 随机返回序列中的某个值
+        格式: random.choice(序列)
+        返回值: 序列中的某个值
+    - shuffle(): 随机打乱列表
+        格式: random.shuffle(列表)
+        返回值: 打乱顺序之后的列表
+    - randint(a,b): 随机产生一个整数,包含a和b
+        格式: random.randint(a,b)
+        返回值: 随机一个整数
+- log模块资料
+    - http://www.cnblogs.com/yyds/p/6901864.html
